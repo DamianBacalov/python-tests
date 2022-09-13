@@ -3,9 +3,8 @@ import pika
 
 
 def callback(ch, method, properties, body):
-    print(" [x] Received %s" % body)
     message = body.decode()
-    print(message)
+    print(" [x] Received %s" % message)
 
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
@@ -17,4 +16,6 @@ channel.queue_declare(queue='task_queue', durable=True)
 
 channel.basic_qos(prefetch_count=1)
 channel.basic_consume(queue='task_queue', on_message_callback=callback)
+
+print(" [x] Waiting messages")
 channel.start_consuming()
